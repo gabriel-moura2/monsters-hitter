@@ -20,7 +20,7 @@ class Scene:
 
     def get_component(self, entity, component_type):
         if component_type in self.components:
-            return self.components[component_type].get(entity.id)
+            return self.components[component_type][entity.id]
         return None
     
     def remove_component(self, entity, component_type):
@@ -42,3 +42,19 @@ class Scene:
     def process_systems(self, dt):
         for system in self.systems:
             system.process(dt)
+
+    def get_components_for_entities(self, *component_types):
+        if not component_types:
+            return
+        
+        if component_types[0] not in self.components:
+            return
+        
+        candidate_entities_ids = set(self.components[component_types[0]].keys())
+        for component_type in component_types[1:]:
+            if component_type not in self.components:
+                return
+            candidate_entities_ids &= set(self.components[component_type].keys())
+        
+        for entity_id in candidate_entities_ids:
+            yield (entity_id,) + tuple(self.components[comp_type][entity_id] for comp_type in component_types)

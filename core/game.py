@@ -8,7 +8,7 @@ class Game:
         pygame.display.set_caption("Space shooter")
         self.clock = pygame.time.Clock()
         self.running = True
-        self.scene_manager = SceneManager()
+        self.scene_manager = SceneManager(self.screen)
         
     async def run(self):
         while self.running:
